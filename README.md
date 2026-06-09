@@ -93,6 +93,16 @@ This creates the virtual environment and installs dependencies from `pyproject.t
 
 ---
 
+## Training Pages
+
+This repository also contains HTML training material:
+
+- `index.html` - self-study guide for MCP and Rabobank Design System context
+- `mcp-extension-lab.html` - hands-on developer lab for extending this MCP server
+- `mcp-extension-trainer-answer-key.html` - trainer guide with expected solution and demo flow
+
+---
+
 ## Step 1 — Run the internal API
 
 Terminal 1:
