@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rabobank MCP Server Extension Lab</title>
+    <style>
+        :root {
+            --rabo-blue: #002b7f;
+            --rabo-bright-blue: #0057d8;
+            --rabo-orange: #ff6600;
+            --rabo-light-blue: #eef6ff;
+            --rabo-soft-orange: #fff3e8;
+            --rabo-border: #c9dcff;
+            --rabo-green: #0b7a3b;
+            --rabo-purple: #5540a3;
+            --text: #07183d;
+            --muted: #52637a;
+            --card: rgba(255, 255, 255, 0.94);
+            --shadow: 0 18px 45px rgba(0, 43, 127, 0.10);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(0, 87, 216, 0.14), transparent 30%),
+                radial-gradient(circle at top right, rgba(255, 102, 0, 0.11), transparent 28%),
+                linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+            color: var(--text);
+            line-height: 1.55;
+        }
+
+        .page {
+            width: min(1540px, 96vw);
+            margin: 0 auto;
+            padding: 34px 0 54px;
+        }
+
+        header.hero {
+            display: grid;
+            grid-template-columns: 1fr 170px;
+            gap: 28px;
+            align-items: start;
+            margin-bottom: 22px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2.5rem, 5vw, 5.2rem);
+            line-height: .92;
+            letter-spacing: -0.07em;
+            color: var(--rabo-blue);
+        }
+
+        .subtitle {
+            max-width: 980px;
+            margin: 16px 0 0;
+            font-size: clamp(1rem, 1.5vw, 1.35rem);
+            color: var(--muted);
+        }
+
+        .logo {
+            text-align: center;
+            color: var(--rabo-blue);
+            font-weight: 800;
+        }
+
+        .logo-mark {
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 6px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: white;
+            background:
+                radial-gradient(circle at center, #ff9b2f 0 35%, #ff6600 36% 68%, transparent 69%),
+                linear-gradient(135deg, var(--rabo-blue), var(--rabo-bright-blue));
+            box-shadow: var(--shadow);
+            font-size: 2.1rem;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .pill {
+            border: 1px solid var(--rabo-border);
+            background: #fff;
+            border-radius: 999px;
+            padding: 9px 14px;
+            color: var(--rabo-blue);
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(0, 43, 127, .06);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        nav {
+            position: sticky;
+            top: 18px;
+            background: var(--card);
+            border: 1px solid var(--rabo-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px;
+        }
+
+        nav h2 {
+            margin: 0 0 12px;
+            color: var(--rabo-blue);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        nav a {
+            display: block;
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-weight: 650;
+            font-size: .94rem;
+        }
+
+        nav a:hover {
+            background: var(--rabo-light-blue);
+            color: var(--rabo-bright-blue);
+        }
+
+        section {
+            margin-bottom: 22px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--rabo-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .card h2 {
+            margin: 0 0 14px;
+            color: var(--rabo-bright-blue);
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+            font-size: 1.25rem;
+        }
+
+        .card h3 {
+            margin: 20px 0 10px;
+            color: var(--rabo-blue);
+            letter-spacing: -0.02em;
+            font-size: 1.08rem;
+        }
+
+        .lead {
+            font-size: 1.12rem;
+            color: var(--muted);
+            max-width: 1050px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .mini-card {
+            background: #fff;
+            border: 1px solid #dbe8ff;
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .mini-card.orange {
+            border-color: #ffc899;
+            background: linear-gradient(180deg, #fff, var(--rabo-soft-orange));
+        }
+
+        .mini-card.green {
+            border-color: #bdebd0;
+            background: linear-gradient(180deg, #fff, #effbf4);
+        }
+
+        .mini-card.purple {
+            border-color: #d7cdfc;
+            background: linear-gradient(180deg, #fff, #f6f3ff);
+        }
+
+        .mini-card h3 {
+            margin-top: 0;
+        }
+
+        .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-size: 1.5rem;
+            background: var(--rabo-light-blue);
+            color: var(--rabo-bright-blue);
+            margin-bottom: 12px;
+            font-weight: 900;
+        }
+
+        .orange .icon {
+            background: var(--rabo-soft-orange);
+            color: var(--rabo-orange);
+        }
+
+        .green .icon {
+            background: #e9f9ef;
+            color: var(--rabo-green);
+        }
+
+        .purple .icon {
+            background: #f2eeff;
+            color: var(--rabo-purple);
+        }
+
+        .diagram {
+            display: grid;
+            grid-template-columns: 1fr .35fr 1fr .35fr 1.25fr;
+            gap: 12px;
+            align-items: center;
+            margin-top: 18px;
+        }
+
+        .node {
+            min-height: 155px;
+            border: 1px solid var(--rabo-border);
+            border-radius: 16px;
+            background: linear-gradient(180deg, #ffffff, #f4f8ff);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 18px;
+        }
+
+        .node.server {
+            border-color: #ffb98a;
+            background: linear-gradient(180deg, #fff, var(--rabo-soft-orange));
+        }
+
+        .node strong {
+            color: var(--rabo-blue);
+            font-size: 1.08rem;
+        }
+
+        .node.server strong {
+            color: var(--rabo-orange);
+        }
+
+        .node .emoji {
+            font-size: 2.7rem;
+            margin-bottom: 10px;
+        }
+
+        .arrow {
+            text-align: center;
+            color: var(--rabo-bright-blue);
+            font-size: 2.4rem;
+            font-weight: 900;
+        }
+
+        .subtext {
+            color: var(--muted);
+            font-size: .93rem;
+            line-height: 1.45;
+        }
+
+        .step-list {
+            counter-reset: steps;
+            display: grid;
+            gap: 12px;
+        }
+
+        .step {
+            counter-increment: steps;
+            display: grid;
+            grid-template-columns: 42px 1fr;
+            gap: 14px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #dbe8ff;
+            border-radius: 14px;
+            align-items: start;
+        }
+
+        .step::before {
+            content: counter(steps);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--rabo-bright-blue);
+            color: white;
+            font-weight: 900;
+        }
+
+        .step strong {
+            display: block;
+            color: var(--rabo-blue);
+            margin-bottom: 4px;
+        }
+
+        .code {
+            background: #071326;
+            color: #e9f2ff;
+            border-radius: 13px;
+            padding: 16px;
+            font-family: "Cascadia Code", Consolas, monospace;
+            font-size: .88rem;
+            overflow: auto;
+            line-height: 1.55;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+            margin: 12px 0;
+        }
+
+        .green-text {
+            color: #9df59d;
+        }
+
+        .orange-text {
+            color: #ffb274;
+        }
+
+        .blue-text {
+            color: #8ec5ff;
+        }
+
+        .lab {
+            border-left: 6px solid var(--rabo-orange);
+            background: linear-gradient(180deg, #fff, #fff8f2);
+        }
+
+        .lab h2 {
+            color: var(--rabo-orange);
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0;
+            display: grid;
+            gap: 8px;
+        }
+
+        .checklist li {
+            padding: 10px 12px;
+            background: #fff;
+            border: 1px solid #dbe8ff;
+            border-radius: 12px;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: var(--rabo-green);
+            font-weight: 900;
+            margin-right: 10px;
+        }
+
+        .warning {
+            background: var(--rabo-soft-orange);
+            border: 1px solid #ffc899;
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .warning strong {
+            color: var(--rabo-orange);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 14px;
+            margin-top: 12px;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #dbe8ff;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: var(--rabo-light-blue);
+            color: var(--rabo-blue);
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .rubric td:first-child {
+            font-weight: 800;
+            color: var(--rabo-blue);
+            width: 26%;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .timeline-item {
+            background: white;
+            border: 1px solid #dbe8ff;
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            text-align: center;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            top: 38%;
+            right: -14px;
+            color: var(--rabo-bright-blue);
+            font-size: 1.5rem;
+            font-weight: 900;
+            z-index: 2;
+        }
+
+        .circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 10px;
+            color: var(--rabo-bright-blue);
+            background: var(--rabo-light-blue);
+            font-size: 1.3rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            margin-top: 26px;
+            font-size: .95rem;
+        }
+
+        @media print {
+            nav {
+                display: none;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                background: white;
+            }
+
+            .card,
+            .mini-card,
+            .step,
+            .timeline-item {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            section {
+                break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 1100px) {
+
+            header.hero,
+            .layout,
+            .grid-2,
+            .grid-3,
+            .grid-4,
+            .timeline {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                position: static;
+            }
+
+            .diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .timeline-item:not(:last-child)::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <header class="hero">
+            <div>
+                <h1>MCP Server<br />Extension Lab</h1>
+                <p class="subtitle">
+                    Learn how to extend the existing Rabobank demo MCP server with new internal API endpoints,
+                    new MCP tools, new resources and reusable prompts that GitHub Copilot can call.
+                </p>
+                <div class="meta-row">
+                    <span class="pill">Audience: Developers</span>
+                    <span class="pill">Format: Guided lab</span>
+                    <span class="pill">Focus: FastAPI, FastMCP, uv</span>
+                    <span class="pill">Outcome: Extend the current demo server</span>
+                </div>
+            </div>
+            <div class="logo">
+                <div class="logo-mark">⌂</div>
+                Rabobank
+            </div>
+        </header>
+
+        <div class="layout">
+            <nav>
+                <h2>Lab contents</h2>
+                <a href="#overview">1. Overview</a>
+                <a href="#goal">2. Learning goal</a>
+                <a href="#architecture">3. What you extend</a>
+                <a href="#flow">4. Lab flow</a>
+                <a href="#scenarios">5. Core scenarios</a>
+                <a href="#implementation">6. Implementation guide</a>
+                <a href="#deliverables">7. Deliverables</a>
+                <a href="#prompts">8. Demo prompts</a>
+                <a href="#rubric">9. Success criteria</a>
+            </nav>
+
+            <div>
+                <section id="overview" class="card lab">
+                    <h2>1. Overview</h2>
+                    <p class="lead">
+                        This lab is part of the Rabobank MCP training. Participants start from the current demo project
+                        and extend it with additional capabilities. The focus is not only on adding code, but on making
+                        clear design choices about when something should be exposed as a tool, a resource or a prompt.
+                    </p>
+
+                    <div class="grid-4" style="margin-top:18px;">
+                        <div class="mini-card">
+                            <div class="icon">🎯</div>
+                            <h3>Main goal</h3>
+                            <p>Extend the MCP server so Copilot can do more than in the starter version.</p>
+                        </div>
+                        <div class="mini-card green">
+                            <div class="icon">🔌</div>
+                            <h3>API work</h3>
+                            <p>Add at least one new internal endpoint that models a useful business capability.</p>
+                        </div>
+                        <div class="mini-card orange">
+                            <div class="icon">🟧</div>
+                            <h3>MCP work</h3>
+                            <p>Expose the new capability as an MCP tool and add supporting context through a resource or prompt.</p>
+                        </div>
+                        <div class="mini-card purple">
+                            <div class="icon">✅</div>
+                            <h3>Validation</h3>
+                            <p>Prove the extension works through API calls and Copilot prompts.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="goal" class="card">
+                    <h2>2. Learning Goal</h2>
+                    <p>
+                        After this lab, a developer should understand how to evolve the current MCP server in a controlled,
+                        enterprise-friendly way. That means adding business value without breaking the structure of the existing demo.
+                    </p>
+
+                    <h3>Expected learning outcomes</h3>
+                    <ul class="checklist">
+                        <li>Explain when a capability should become an MCP tool, resource or prompt.</li>
+                        <li>Add new demo data and expose it through the internal FastAPI layer.</li>
+                        <li>Create at least one new MCP tool that calls the new API endpoint.</li>
+                        <li>Add a resource or prompt that improves how developers use the new capability.</li>
+                        <li>Test the extension end-to-end with uv, the API docs and Copilot prompts.</li>
+                    </ul>
+
+                    <div class="warning">
+                        <strong>Training intent:</strong> the strongest submissions are not the biggest ones. The best result is a small,
+                        coherent extension that clearly demonstrates why the MCP layer exists.
+                    </div>
+                </section>
+
+                <section id="architecture" class="card">
+                    <h2>3. What You Extend</h2>
+                    <p>
+                        The current project already has demo data, a protected internal API, an MCP server and sample prompts.
+                        This lab builds on that structure instead of creating a new project from scratch.
+                    </p>
+
+                    <div class="diagram">
+                        <div class="node">
+                            <div class="emoji">👨‍💻</div>
+                            <strong>Developer + Copilot</strong>
+                            <span class="subtext">Asks for customer, product, policy or review information</span>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="node server">
+                            <div class="emoji">🟧</div>
+                            <strong>MCP Server</strong>
+                            <span class="subtext">Exposes tools, resources and prompts backed by the internal API</span>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="node">
+                            <div class="emoji">🏦</div>
+                            <strong>Internal Demo API</strong>
+                            <span class="subtext">Provides customer, product, API catalog and policy data</span>
+                        </div>
+                    </div>
+
+                    <h3>Files you are expected to touch</h3>
+                    <div class="grid-4">
+                        <div class="mini-card">
+                            <h3>app/data.py</h3>
+                            <p>Add small, readable demo datasets or policy text for the new scenario.</p>
+                        </div>
+                        <div class="mini-card green">
+                            <h3>app/internal_api.py</h3>
+                            <p>Add the new GET or POST endpoint using the existing demo auth pattern.</p>
+                        </div>
+                        <div class="mini-card orange">
+                            <h3>app/mcp_server.py</h3>
+                            <p>Add the tool, resource or prompt that exposes the new behavior through MCP.</p>
+                        </div>
+                        <div class="mini-card purple">
+                            <h3>README.md</h3>
+                            <p>Optionally update sample prompts and setup notes for the new lab capability.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="flow" class="card lab">
+                    <h2>4. Lab Flow</h2>
+                    <p>Use this sequence to keep the work focused and easy to validate.</p>
+
+                    <div class="step-list">
+                        <div class="step">
+                            <div>
+                                <strong>Inspect the current capability</strong>
+                                Review the existing endpoints and MCP tools so you understand the extension points before changing anything.
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div>
+                                <strong>Add new demo data</strong>
+                                Introduce a small dataset or policy that supports the new business scenario.
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div>
+                                <strong>Create the internal API endpoint</strong>
+                                Add a new read endpoint or a controlled action endpoint that uses the new data.
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div>
+                                <strong>Expose it through MCP</strong>
+                                Add a tool, and optionally a resource or prompt, so an MCP client can use the new capability clearly.
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div>
+                                <strong>Validate the end-to-end flow</strong>
+                                Test the API directly, then test the same capability through Copilot and MCP prompts.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="scenarios" class="card">
+                    <h2>5. Core Scenarios</h2>
+                    <p>Choose at least one of the first three scenarios. The fourth is a stretch goal.</p>
+
+                    <div class="grid-2">
+                        <div class="mini-card">
+                            <h3>Scenario A: Customer product overview</h3>
+                            <p>
+                                Add a new endpoint that returns the active products of a customer enriched with product details.
+                                Then expose it through an MCP tool such as <code>get_customer_product_overview</code>.
+                            </p>
+                        </div>
+                        <div class="mini-card green">
+                            <h3>Scenario B: Controlled action</h3>
+                            <p>
+                                Add a POST endpoint that performs a review or follow-up action, then expose it as an MCP tool.
+                                This demonstrates the difference between read-only data and controlled actions.
+                            </p>
+                        </div>
+                        <div class="mini-card orange">
+                            <h3>Scenario C: New policy or guide</h3>
+                            <p>
+                                Add a new resource that explains how developers should interpret the new endpoint or tool output.
+                                This shows how resources complement tools.
+                            </p>
+                        </div>
+                        <div class="mini-card purple">
+                            <h3>Scenario D: Reusable review prompt</h3>
+                            <p>
+                                Add an MCP prompt that guides Copilot through a structured review of your new capability.
+                                This creates consistent AI output across users.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3>Recommended minimum scope</h3>
+                    <ul class="checklist">
+                        <li>One new internal API endpoint.</li>
+                        <li>One new MCP tool that calls it.</li>
+                        <li>One new resource or prompt that supports the same scenario.</li>
+                        <li>Two demo prompts that prove the extension works.</li>
+                    </ul>
+                </section>
+
+                <section id="implementation" class="card lab">
+                    <h2>6. Implementation Guide</h2>
+                    <p class="lead">
+                        The most practical path for this project is to add a customer product overview scenario. It reuses existing data,
+                        requires little code and gives a very clear improvement over the current demo.
+                    </p>
+
+                    <div class="grid-2">
+                        <div class="mini-card">
+                            <h3>Suggested endpoint</h3>
+                            <p>Add a new route in <code>app/internal_api.py</code>:</p>
+                            <pre class="code">@app.get("/customers/{customer_id}/product-overview")
+def get_customer_product_overview(customer_id: str, x_api_key: str | None = Header(default=None)):
+    require_demo_api_key(x_api_key)
+    customer = CUSTOMERS.get(customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+
+    products = [PRODUCTS[product_id] for product_id in customer["active_products"]]
+    return {
+        "customer_id": customer_id,
+        "segment": customer["segment"],
+        "products": products,
+    }</pre>
+                        </div>
+                        <div class="mini-card orange">
+                            <h3>Suggested tool</h3>
+                            <p>Add a matching MCP tool in <code>app/mcp_server.py</code>:</p>
+                            <pre class="code">@mcp.tool
+def get_customer_product_overview(customer_id: str) -> dict[str, Any]:
+    """Retrieve enriched product data for a customer."""
+    return internal_get(f"/customers/{customer_id}/product-overview")</pre>
+                        </div>
+                    </div>
+
+                    <h3>Suggested supporting resource</h3>
+                    <pre class="code">PRODUCT_OVERVIEW_GUIDE = """
+Customer Product Overview Guide - Demo
+
+1. Use product_id for integration logic.
+2. Use name and description for summaries.
+3. required_checks is intended for internal operational guidance.
+4. Do not expose developer-only notes to end users.
+5. Compare products by domain when summarizing portfolios.
+""".strip()</pre>
+
+                    <div class="warning">
+                        <strong>Design note:</strong> do not add random extra features. Keep the extension coherent.
+                        A small, complete scenario teaches more than five unrelated additions.
+                    </div>
+                </section>
+
+                <section id="deliverables" class="card">
+                    <h2>7. Deliverables</h2>
+                    <table class="rubric">
+                        <tbody>
+                            <tr>
+                                <td>New data</td>
+                                <td>Add a small new dataset or guide text in <code>app/data.py</code>.</td>
+                            </tr>
+                            <tr>
+                                <td>New API capability</td>
+                                <td>Add a GET or POST endpoint in <code>app/internal_api.py</code> that uses the new data.</td>
+                            </tr>
+                            <tr>
+                                <td>New MCP tool</td>
+                                <td>Add at least one new tool in <code>app/mcp_server.py</code> that exposes the new endpoint.</td>
+                            </tr>
+                            <tr>
+                                <td>New resource or prompt</td>
+                                <td>Add at least one supporting resource or prompt for the same scenario.</td>
+                            </tr>
+                            <tr>
+                                <td>Demo proof</td>
+                                <td>Provide sample prompts or calls that show the new capability working end-to-end.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="prompts" class="card lab">
+                    <h2>8. Demo Prompts</h2>
+                    <p>Use prompts like these to verify the final extension in Copilot.</p>
+
+                    <div class="grid-2">
+                        <div class="mini-card">
+                            <h3>Prompt 1</h3>
+                            <p>Use the internal MCP server to retrieve the product overview for customer CUST-1001 and summarize the products by domain.</p>
+                        </div>
+                        <div class="mini-card green">
+                            <h3>Prompt 2</h3>
+                            <p>Compare the product overview for CUST-1001 and CUST-2002 and highlight the differences in required checks.</p>
+                        </div>
+                        <div class="mini-card orange">
+                            <h3>Prompt 3</h3>
+                            <p>Use the new guide resource and explain how a developer should interpret the product overview response.</p>
+                        </div>
+                        <div class="mini-card purple">
+                            <h3>Prompt 4</h3>
+                            <p>Use the new review prompt for customer CUST-1001 and return action items for a developer implementing the integration.</p>
+                        </div>
+                    </div>
+
+                    <h3>Direct API validation</h3>
+                    <pre class="code">uv run bank-api
+
+curl http://127.0.0.1:8000/health
+curl -H "x-api-key: training-demo-key" http://127.0.0.1:8000/customers/CUST-1001/product-overview</pre>
+
+                    <h3>MCP validation</h3>
+                    <pre class="code">uv run bank-mcp</pre>
+                </section>
+
+                <section id="rubric" class="card">
+                    <h2>9. Success Criteria</h2>
+                    <table class="rubric">
+                        <tbody>
+                            <tr>
+                                <td>Clear scenario</td>
+                                <td>The extension solves one coherent developer or business question instead of many unrelated ones.</td>
+                            </tr>
+                            <tr>
+                                <td>Correct layering</td>
+                                <td>The internal API owns the data and logic, while the MCP layer exposes it cleanly to clients.</td>
+                            </tr>
+                            <tr>
+                                <td>Good MCP design</td>
+                                <td>Tool, resource and prompt names are understandable and aligned with their actual role.</td>
+                            </tr>
+                            <tr>
+                                <td>Validation</td>
+                                <td>The new capability is tested through both direct API calls and MCP prompts.</td>
+                            </tr>
+                            <tr>
+                                <td>Enterprise awareness</td>
+                                <td>The design keeps demo auth, avoids unnecessary data exposure and respects the idea of controlled access.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <p class="footer">
+                    MCP Server Extension Lab · Rabobank training material · Based on the existing FastAPI and FastMCP demo project
+                </p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html><!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rabobank MCP Server Extension Lab</title>
+    <style>
+        :root {
+            --rabo-blue: #002b7f;
+            --rabo-bright-blue: #0057d8;
+            --rabo-orange: #ff6600;
+            --rabo-light-blue: #eef6ff;
+            --rabo-soft-orange: #fff3e8;
+            --rabo-border: #c9dcff;
+            --rabo-green: #0b7a3b;
+            --rabo-purple: #5540a3;
+            --text: #07183d;
+            --muted: #52637a;
+            --card: rgba(255, 255, 255, 0.94);
+            --shadow: 0 18px 45px rgba(0, 43, 127, 0.10);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(0, 87, 216, 0.14), transparent 30%),
+                radial-gradient(circle at top right, rgba(255, 102, 0, 0.11), transparent 28%),
+                linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+            color: var(--text);
+            line-height: 1.55;
+        }
+
+        .page {
+            width: min(1540px, 96vw);
+            margin: 0 auto;
+            padding: 34px 0 54px;
+        }
+
+        header.hero {
+            display: grid;
+            grid-template-columns: 1fr 170px;
+            gap: 28px;
+            align-items: start;
+            margin-bottom: 22px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2.5rem, 5vw, 5.2rem);
+            line-height: .92;
+            letter-spacing: -0.07em;
+            color: var(--rabo-blue);
+        }
+
+        .subtitle {
+            max-width: 980px;
+            margin: 16px 0 0;
+            font-size: clamp(1rem, 1.5vw, 1.35rem);
+            color: var(--muted);
+        }
+
+        .logo {
+            text-align: center;
+            color: var(--rabo-blue);
+            font-weight: 800;
+        }
+
+        .logo-mark {
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 6px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: white;
+            background:
+                radial-gradient(circle at center, #ff9b2f 0 35%, #ff6600 36% 68%, transparent 69%),
+                linear-gradient(135deg, var(--rabo-blue), var(--rabo-bright-blue));
+            box-shadow: var(--shadow);
+            font-size: 2.1rem;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .pill {
+            border: 1px solid var(--rabo-border);
+            background: #fff;
+            border-radius: 999px;
+            padding: 9px 14px;
+            color: var(--rabo-blue);
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(0, 43, 127, .06);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        nav {
+            position: sticky;
+            top: 18px;
+            background: var(--card);
+            border: 1px solid var(--rabo-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px;
+        }
+
+        nav h2 {
+            margin: 0 0 12px;
+            color: var(--rabo-blue);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        nav a {
+            display: block;
+            text-decoration: none;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-weight: 650;
+            font-size: .94rem;
+        }
+
+        nav a:hover {
+            background: var(--rabo-light-blue);
+            color: var(--rabo-bright-blue);
+        }
+
+        section {
+            margin-bottom: 22px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--rabo-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .card h2 {
+            margin: 0 0 14px;
+            color: var(--rabo-bright-blue);
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+            font-size: 1.25rem;
+        }
+
+        .card h3 {
+            margin: 20px 0 10px;
+            color: var(--rabo-blue);
+            letter-spacing: -0.02em;
+            font-size: 1.08rem;
+        }
+
+        .lead {
+            font-size: 1.12rem;
+            color: var(--muted);
+            max-width: 1050px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .mini-card {
+            background: #fff;
+            border: 1px solid #dbe8ff;
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .mini-card.orange {
+            border-color: #ffc899;
+            background: linear-gradient(180deg, #fff, var(--rabo-soft-orange));
+        }
+
+        .mini-card.green {
+            border-color: #bdebd0;
+            background: linear-gradient(180deg, #fff, #effbf4);
+        }
+
+        .mini-card.purple {
+            border-color: #d7cdfc;
+            background: linear-gradient(180deg, #fff, #f6f3ff);
+        }
+
+        .mini-card h3 {
+            margin-top: 0;
+        }
+
+        .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-size: 1.5rem;
+            background: var(--rabo-light-blue);
+            color: var(--rabo-bright-blue);
+            margin-bottom: 12px;
+            font-weight: 900;
+        }
+
+        .orange .icon {
+            background: var(--rabo-soft-orange);
+            color: var(--rabo-orange);
+        }
+
+        .green .icon {
+            background: #e9f9ef;
+            color: var(--rabo-green);
+        }
+
+        .purple .icon {
+            background: #f2eeff;
+            color: var(--rabo-purple);
+        }
+
+        .diagram {
+            display: grid;
+            grid-template-columns: 1fr .35fr 1fr .35fr 1.25fr;
+            gap: 12px;
+            align-items: center;
+            margin-top: 18px;
+        }
+
+        .node {
+            min-height: 155px;
+            border: 1px solid var(--rabo-border);
+            border-radius: 16px;
+            background: linear-gradient(180deg, #ffffff, #f4f8ff);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 18px;
+        }
+
+        .node.server {
+            border-color: #ffb98a;
+            background: linear-gradient(180deg, #fff, var(--rabo-soft-orange));
+        }
+
+        .node strong {
+            color: var(--rabo-blue);
+            font-size: 1.08rem;
+        }
+
+        .node.server strong {
+            color: var(--rabo-orange);
+        }
+
+        .node .emoji {
+            font-size: 2.7rem;
+            margin-bottom: 10px;
+        }
+
+        .arrow {
+            text-align: center;
+            color: var(--rabo-bright-blue);
+            font-size: 2.4rem;
+            font-weight: 900;
+        }
+
+        .subtext {
+            color: var(--muted);
+            font-size: .93rem;
+            line-height: 1.45;
+        }
+
+        .step-list {
+            counter-reset: steps;
+            display: grid;
+            gap: 12px;
+        }
+
+        .step {
+            counter-increment: steps;
+            display: grid;
+            grid-template-columns: 42px 1fr;
+            gap: 14px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #dbe8ff;
+            border-radius: 14px;
+            align-items: start;
+        }
+
+        .step::before {
+            content: counter(steps);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--rabo-bright-blue);
+            color: white;
+            font-weight: 900;
+        }
+
+        .step strong {
+            display: block;
+            color: var(--rabo-blue);
+            margin-bottom: 4px;
+        }
+
+        .code {
+            background: #071326;
+            color: #e9f2ff;
+            border-radius: 13px;
+            padding: 16px;
+            font-family: "Cascadia Code", Consolas, monospace;
+            font-size: .88rem;
+            overflow: auto;
+            line-height: 1.55;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+            margin: 12px 0;
+            white-space: pre-wrap;
+        }
+
+        .lab {
+            border-left: 6px solid var(--rabo-orange);
+            background: linear-gradient(180deg, #fff, #fff8f2);
+        }
+
+        .lab h2 {
+            color: var(--rabo-orange);
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0;
+            display: grid;
+            gap: 8px;
+        }
+
+        .checklist li {
+            padding: 10px 12px;
+            background: #fff;
+            border: 1px solid #dbe8ff;
+            border-radius: 12px;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: var(--rabo-green);
+            font-weight: 900;
+            margin-right: 10px;
+        }
+
+        .warning {
+            background: var(--rabo-soft-orange);
+            border: 1px solid #ffc899;
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .warning strong {
+            color: var(--rabo-orange);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 14px;
+            margin-top: 12px;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #dbe8ff;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: var(--rabo-light-blue);
+            color: var(--rabo-blue);
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .timeline-item {
+            background: white;
+            border: 1px solid #dbe8ff;
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            text-align: center;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            top: 38%;
+            right: -14px;
+            color: var(--rabo-bright-blue);
+            font-size: 1.5rem;
+            font-weight: 900;
+            z-index: 2;
+        }
+
+        .circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 10px;
+            color: var(--rabo-bright-blue);
+            background: var(--rabo-light-blue);
+            font-size: 1.3rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            margin-top: 26px;
+            font-size: .95rem;
+        }
+
+        @media print {
+            nav {
+                display: none;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                background: white;
+            }
+
+            .card,
+            .mini-card,
+            .step,
+            .timeline-item {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            section {
+                break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 1100px) {
+
+            header.hero,
+            .layout,
+            .grid-2,
+            .grid-3,
+            .grid-4,
+            .timeline {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                position: static;
+            }
+
+            .diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .timeline-item:not(:last-child)::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <header class="hero">
+            <div>
+                <h1>MCP Server<br />Extension Lab</h1>
+                <p class="subtitle">
+                    A hands-on Rabobank training lab for developers who need to extend the existing demo MCP server
+                    with additional endpoints, actions, tools, resources and prompts.
+                </p>
+                <div class="meta-row">
+                    <span class="pill">Audience: Developers</span>
+                    <span class="pill">Format: Guided hands-on lab</span>
+                    <span class="pill">Focus: FastAPI, FastMCP, uv</span>
+                    <span class="pill">Outcome: Extend the demo server end-to-end</span>
+                </div>
+            </div>
+            <div class="logo">
+                <div class="logo-mark">⚙</div>
+                Rabobank
+            </div>
+        </header>
+
+        <div class="layout">
+            <nav>
+                <h2>Lab contents</h2>
+                <a href="#overview">1. Overview</a>
+                <a href="#goal">2. Learning goal</a>
+                <a href="#architecture">3. Extension architecture</a>
+                <a href="#flow">4. Lab flow</a>
+                <a href="#scenarios">5. Lab scenarios</a>
+                <a href="#tasks">6. Development tasks</a>
+                <a href="#deliverables">7. Deliverables</a>
+                <a href="#prompts">8. Demo prompts</a>
+                <a href="#criteria">9. Success criteria</a>
+            </nav>
+
+            <div>
+                <section id="overview" class="card lab">
+                    <h2>1. Overview</h2>
+                    <p class="lead">
+                        This lab is built around the existing internal banking demo MCP server in this repository.
+                        Participants extend the current solution instead of starting from scratch. That means they will
+                        work across the existing FastAPI layer, the MCP layer and the training prompts that expose the
+                        new capabilities to GitHub Copilot.
+                    </p>
+
+                    <div class="grid-4" style="margin-top:18px;">
+                        <div class="mini-card">
+                            <div class="icon">🎯</div>
+                            <h3>Goal</h3>
+                            <p>Learn how to add new capabilities to an MCP server in a structured, realistic way.</p>
+                        </div>
+                        <div class="mini-card green">
+                            <div class="icon">🧱</div>
+                            <h3>Starting point</h3>
+                            <p>Use the current demo with customer, product, API catalog, policy and architecture tools.</p>
+                        </div>
+                        <div class="mini-card orange">
+                            <div class="icon">🟧</div>
+                            <h3>Focus</h3>
+                            <p>Extend internal APIs first, then expose the capability through MCP.</p>
+                        </div>
+                        <div class="mini-card purple">
+                            <div class="icon">✅</div>
+                            <h3>Result</h3>
+                            <p>Copilot can use newly added tools, resources and prompts during the demo.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="goal" class="card">
+                    <h2>2. Learning Goal</h2>
+                    <p>
+                        By the end of the lab, a developer should be able to explain where new functionality belongs in
+                        the project, implement it in the internal API, expose it via MCP, and validate the result with
+                        practical prompts and test calls.
+                    </p>
+
+                    <h3>Expected learning outcomes</h3>
+                    <ul class="checklist">
+                        <li>Explain when a capability should be implemented as an MCP tool, resource or prompt.</li>
+                        <li>Add new demo data and new endpoints without breaking the existing structure.</li>
+                        <li>Create at least one new MCP tool that calls a new internal API endpoint.</li>
+                        <li>Create at least one new MCP resource or reusable prompt.</li>
+                        <li>Demonstrate the extension with working API calls and Copilot prompts.</li>
+                    </ul>
+
+                    <div class="warning">
+                        <strong>Trainer note:</strong> The point of the lab is not only to add code. The deeper learning
+                        goal is to show how an MCP server becomes a controlled AI-facing layer over internal systems.
+                    </div>
+                </section>
+
+                <section id="architecture" class="card">
+                    <h2>3. Extension Architecture</h2>
+                    <p>
+                        Participants should work from the inside out. Add or adapt demo data, expose it through the
+                        internal API, then wire it into MCP as a tool, resource or prompt.
+                    </p>
+
+                    <div class="diagram">
+                        <div class="node">
+                            <div class="emoji">🗂</div>
+                            <strong>Demo Data</strong>
+                            <span class="subtext">New fake records, policies or review outcomes in app/data.py</span>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="node">
+                            <div class="emoji">🔌</div>
+                            <strong>Internal API</strong>
+                            <span class="subtext">New GET or POST endpoints in app/internal_api.py</span>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="node server">
+                            <div class="emoji">🤖</div>
+                            <strong>MCP Server</strong>
+                            <span class="subtext">New tool, resource or prompt in app/mcp_server.py</span>
+                        </div>
+                    </div>
+
+                    <h3>Files to update</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Purpose in the lab</th>
+                                <th>Typical change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>app/data.py</td>
+                                <td>Stores fake business data and policy content</td>
+                                <td>Add a new dataset, guide or rule set</td>
+                            </tr>
+                            <tr>
+                                <td>app/internal_api.py</td>
+                                <td>Exposes approved internal endpoints</td>
+                                <td>Add a new GET endpoint and optionally a POST action</td>
+                            </tr>
+                            <tr>
+                                <td>app/mcp_server.py</td>
+                                <td>Exposes AI-facing tools, resources and prompts</td>
+                                <td>Add a new MCP tool plus a resource or prompt</td>
+                            </tr>
+                            <tr>
+                                <td>README.md</td>
+                                <td>Documents the extended scenario</td>
+                                <td>Add test commands and sample prompts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="flow" class="card">
+                    <h2>4. Lab Flow</h2>
+                    <div class="step-list">
+                        <div class="step">
+                            <div>
+                                <strong>Study the current server</strong>
+                                Review the existing customer, product, API catalog, policy and architecture capabilities.
+                                Identify where data lives, how the API exposes it and how MCP wraps it.
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div>
+                                <strong>Add a new internal capability</strong>
+                                Create a realistic new scenario such as customer product overview, service signals,
+                                onboarding follow-up or review guidance.
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div>
+                                <strong>Create the API endpoint</strong>
+                                Build a GET endpoint for read-only data and optionally a POST endpoint for a controlled
+                                action or review flow.
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div>
+                                <strong>Expose it through MCP</strong>
+                                Add a tool for targeted use, a resource for stable knowledge, and optionally a prompt
+                                that standardizes the analysis output.
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div>
+                                <strong>Validate and demo</strong>
+                                Test both the API and the MCP layer. The lab is only complete if Copilot can use the
+                                newly added capability in a clear business scenario.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="scenarios" class="card lab">
+                    <h2>5. Lab Scenarios</h2>
+                    <p>Choose the first three scenarios as the core lab. Use the fourth as a stretch goal.</p>
+
+                    <div class="grid-2">
+                        <div class="mini-card">
+                            <h3>Scenario A - Customer Product Overview</h3>
+                            <p><strong>Business need:</strong> A developer wants one MCP call that returns a customer and
+                                enriched product details together.</p>
+                            <p><strong>Goal:</strong> Add a new read endpoint such as <code>/customers/{customer_id}/product-overview</code>
+                                and expose it as an MCP tool.</p>
+                        </div>
+                        <div class="mini-card green">
+                            <h3>Scenario B - Controlled Follow-Up Action</h3>
+                            <p><strong>Business need:</strong> Demonstrate a safe write-like action for training without
+                                touching real systems.</p>
+                            <p><strong>Goal:</strong> Add a POST endpoint such as <code>/onboarding/cases/{caseId}/follow-up</code>
+                                and expose it as a new MCP tool.</p>
+                        </div>
+                        <div class="mini-card orange">
+                            <h3>Scenario C - Developer Guidance Resource</h3>
+                            <p><strong>Business need:</strong> Teams want consistent explanation of newly added fields,
+                                checks and response meanings.</p>
+                            <p><strong>Goal:</strong> Add a new resource such as <code>guide://customer-product-overview</code>
+                                or <code>policy://data-minimization</code>.</p>
+                        </div>
+                        <div class="mini-card purple">
+                            <h3>Scenario D - Review Prompt Template</h3>
+                            <p><strong>Business need:</strong> Free-form prompts produce inconsistent reviews.</p>
+                            <p><strong>Goal:</strong> Add a prompt template that returns a structured review with
+                                strengths, missing controls, questions and next actions.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tasks" class="card">
+                    <h2>6. Development Tasks</h2>
+
+                    <div class="grid-2">
+                        <div class="mini-card">
+                            <h3>Task 1 - Add new demo data</h3>
+                            <p>Extend <code>app/data.py</code> with a new small, explainable dataset. Keep it fake,
+                                readable and clearly related to the business scenario you picked.</p>
+                            <pre class="code">CUSTOMER_SIGNALS = {
+    "CUST-1001": {
+        "status": "stable",
+        "signals": ["salary-inflow-consistent", "mortgage-payments-on-time"]
+    },
+    "CUST-2002": {
+        "status": "review",
+        "signals": ["seasonal-cashflow", "manual-document-follow-up"]
+    }
+}</pre>
+                        </div>
+
+                        <div class="mini-card orange">
+                            <h3>Task 2 - Add an API endpoint</h3>
+                            <p>Create a new internal API endpoint in <code>app/internal_api.py</code> that exposes the new
+                                scenario with the same demo auth pattern and error handling as the rest of the file.</p>
+                            <pre class="code">@app.get("/customers/{customer_id}/signals")
+def get_customer_signals(customer_id: str, x_api_key: str | None = Header(default=None)):
+    require_demo_api_key(x_api_key)
+    signals = CUSTOMER_SIGNALS.get(customer_id)
+    if not signals:
+        raise HTTPException(status_code=404, detail="Signals not found")
+    return {"customer_id": customer_id, **signals}</pre>
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="margin-top:18px;">
+                        <div class="mini-card green">
+                            <h3>Task 3 - Add a new MCP tool</h3>
+                            <p>Translate the new endpoint into a clear MCP capability in <code>app/mcp_server.py</code>.</p>
+                            <pre class="code">@mcp.tool
+def get_customer_signals(customer_id: str) -> dict[str, Any]:
+    """Retrieve support signals for a customer."""
+    return internal_get(f"/customers/{customer_id}/signals")</pre>
+                        </div>
+
+                        <div class="mini-card purple">
+                            <h3>Task 4 - Add a resource or prompt</h3>
+                            <p>Create stable supporting context for developers and AI. This turns the extension into a
+                                fuller MCP experience rather than a single tool call.</p>
+                            <pre class="code">@mcp.resource("guide://customer-signals")
+def customer_signals_guide() -> str:
+    result = internal_get("/policies/customer-signals-guide")
+    return result["content"]</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="deliverables" class="card lab">
+                    <h2>7. Deliverables</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Deliverable</th>
+                                <th>Minimum expectation</th>
+                                <th>How to verify it</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>New data</td>
+                                <td>A new fake dataset, policy or guide has been added</td>
+                                <td>The content is small, readable and clearly tied to the scenario</td>
+                            </tr>
+                            <tr>
+                                <td>New endpoint</td>
+                                <td>At least one new GET endpoint exists</td>
+                                <td>It works in FastAPI docs or through curl/PowerShell</td>
+                            </tr>
+                            <tr>
+                                <td>New action</td>
+                                <td>Optional but recommended: one new POST endpoint</td>
+                                <td>It returns structured output with result and follow-up actions</td>
+                            </tr>
+                            <tr>
+                                <td>New MCP capability</td>
+                                <td>At least one new tool plus one resource or prompt</td>
+                                <td>Copilot can use it through MCP</td>
+                            </tr>
+                            <tr>
+                                <td>Documentation</td>
+                                <td>Updated README or demo notes</td>
+                                <td>A trainer can run the scenario without guessing the steps</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="prompts" class="card">
+                    <h2>8. Demo Prompts</h2>
+                    <p>Use prompts like these once the extension is implemented.</p>
+
+                    <div class="grid-2">
+                        <div class="mini-card">
+                            <h3>Prompt 1</h3>
+                            <p>Use the internal MCP server to retrieve the new product overview for customer CUST-1001
+                                and summarize the products with the highest control burden.</p>
+                        </div>
+                        <div class="mini-card green">
+                            <h3>Prompt 2</h3>
+                            <p>Use the internal MCP server to retrieve the new customer signals for CUST-2002 and
+                                convert the output into follow-up actions for a developer.</p>
+                        </div>
+                        <div class="mini-card orange">
+                            <h3>Prompt 3</h3>
+                            <p>Use the new guidance resource and explain how the returned fields should be interpreted
+                                in developer tooling versus business-facing summaries.</p>
+                        </div>
+                        <div class="mini-card purple">
+                            <h3>Prompt 4</h3>
+                            <p>Use the new review prompt for the added endpoint and return what looks compliant, what is
+                                missing, open questions and recommended next steps.</p>
+                        </div>
+                    </div>
+
+                    <h3>Manual API checks</h3>
+                    <pre class="code">uv run bank-api
+curl http://127.0.0.1:8000/health
+curl -H "x-api-key: training-demo-key" http://127.0.0.1:8000/customers/CUST-1001/product-overview
+
+uv run bank-mcp</pre>
+                </section>
+
+                <section id="criteria" class="card">
+                    <h2>9. Success Criteria</h2>
+
+                    <div class="grid-3">
+                        <div class="mini-card">
+                            <div class="icon">1</div>
+                            <h3>Works end-to-end</h3>
+                            <p>The new scenario is visible both at the API layer and through MCP.</p>
+                        </div>
+                        <div class="mini-card green">
+                            <div class="icon">2</div>
+                            <h3>Clear design choices</h3>
+                            <p>The participant can explain why a capability is a tool, a resource or a prompt.</p>
+                        </div>
+                        <div class="mini-card orange">
+                            <div class="icon">3</div>
+                            <h3>Safe demo scope</h3>
+                            <p>The extension keeps using fake data, controlled access and explicit boundaries.</p>
+                        </div>
+                    </div>
+
+                    <h3>Trainer checklist</h3>
+                    <ul class="checklist">
+                        <li>New names are clear and consistent with the existing server.</li>
+                        <li>Demo API key handling remains unchanged and correct.</li>
+                        <li>404 and invalid-input behavior remains clean and predictable.</li>
+                        <li>The extension adds real training value instead of only extra code.</li>
+                        <li>The final prompt output is understandable to other developers in the room.</li>
+                    </ul>
+                </section>
+
+                <p class="footer">
+                    MCP Server Extension Lab · Rabobank internal training material · Built for the demo repository in
+                    this workspace
+                </p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
