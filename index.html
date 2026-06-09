@@ -267,6 +267,46 @@
             margin-top: 18px;
         }
 
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1.05fr 2.1fr 1.2fr;
+            gap: 18px;
+            align-items: stretch;
+            margin-top: 18px;
+        }
+
+        .what-is {
+            display: grid;
+            grid-template-columns: 92px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .mcp-icon {
+            width: 92px;
+            height: 92px;
+            border: 2px solid var(--rabo-bright-blue);
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            position: relative;
+            background: #fff;
+            font-size: 2.4rem;
+            color: var(--rabo-bright-blue);
+        }
+
+        .badge {
+            position: absolute;
+            right: -14px;
+            bottom: -10px;
+            background: var(--rabo-orange);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
         .node {
             min-height: 155px;
             border: 1px solid var(--rabo-border);
@@ -310,6 +350,42 @@
             color: var(--muted);
             font-size: .93rem;
             line-height: 1.45;
+        }
+
+        .capabilities {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .capability {
+            display: grid;
+            grid-template-columns: 42px 1fr;
+            gap: 12px;
+            align-items: start;
+            padding: 14px;
+            border: 1px solid #dbe8ff;
+            border-radius: 14px;
+            background: #ffffff;
+        }
+
+        .capability .icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: var(--rabo-light-blue);
+            color: var(--rabo-bright-blue);
+            font-size: 1.35rem;
+            font-weight: 900;
+            margin-bottom: 0;
+        }
+
+        .capability strong {
+            color: var(--rabo-blue);
+            display: block;
+            margin-bottom: 4px;
         }
 
         .step-list {
@@ -485,6 +561,68 @@
             font-size: 1.3rem;
         }
 
+        .benefits {
+            display: grid;
+            gap: 14px;
+        }
+
+        .benefit {
+            display: grid;
+            grid-template-columns: 42px 1fr;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .benefit .icon {
+            color: var(--rabo-bright-blue);
+            font-size: 1.7rem;
+        }
+
+        .benefit strong {
+            color: var(--rabo-blue);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .flow {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .flow-item {
+            background: white;
+            border: 1px solid #dbe8ff;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-item:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            top: 40%;
+            color: var(--rabo-bright-blue);
+            font-size: 1.5rem;
+            font-weight: 900;
+            z-index: 2;
+        }
+
+        .flow-item .circle {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: var(--rabo-light-blue);
+            color: var(--rabo-bright-blue);
+            display: grid;
+            place-items: center;
+            font-size: 1.4rem;
+        }
+
         .footer {
             text-align: center;
             color: var(--muted);
@@ -525,7 +663,10 @@
             .grid-2,
             .grid-3,
             .grid-4,
-            .timeline {
+            .timeline,
+            .overview-grid,
+            .flow,
+            .capabilities {
                 grid-template-columns: 1fr;
             }
 
@@ -541,7 +682,8 @@
                 transform: rotate(90deg);
             }
 
-            .timeline-item:not(:last-child)::after {
+            .timeline-item:not(:last-child)::after,
+            .flow-item:not(:last-child)::after {
                 display: none;
             }
         }
@@ -795,6 +937,117 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <h3>Visual Overview</h3>
+                    <div class="overview-grid">
+                        <div class="mini-card">
+                            <h3>What Is It?</h3>
+                            <div class="what-is">
+                                <div class="mcp-icon">
+                                    &lt;/&gt;
+                                    <span class="badge">MCP</span>
+                                </div>
+                                <p>
+                                    The RDS MCP Server connects GitHub Copilot or other MCP clients to the Rabobank Design System.
+                                    It gives trusted access to components, examples and approved guidance inside the developer workflow.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mini-card orange">
+                            <h3>How It Works</h3>
+                            <div class="diagram" style="margin-top:0;">
+                                <div class="node">
+                                    <div class="emoji">👨‍💻</div>
+                                    <strong>Developer</strong>
+                                    <span class="subtext">Asks in Copilot or the IDE</span>
+                                </div>
+                                <div class="arrow">→</div>
+                                <div class="node">
+                                    <div class="emoji">🤖</div>
+                                    <strong>GitHub Copilot</strong>
+                                    <span class="subtext">Acts as MCP client</span>
+                                </div>
+                                <div class="arrow">→</div>
+                                <div class="node server">
+                                    <div class="emoji">🟧</div>
+                                    <strong>RDS MCP Server</strong>
+                                    <span class="subtext">Returns tools, examples and approved design guidance</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mini-card purple">
+                            <h3>What You Get</h3>
+                            <div class="benefits">
+                                <div class="benefit">
+                                    <div class="icon">⚡</div>
+                                    <div><strong>Faster Development</strong><span class="subtext">Find the right components without leaving the IDE.</span></div>
+                                </div>
+                                <div class="benefit">
+                                    <div class="icon">◎</div>
+                                    <div><strong>Consistency At Scale</strong><span class="subtext">UI stays aligned with Rabobank Design System defaults.</span></div>
+                                </div>
+                                <div class="benefit">
+                                    <div class="icon">🛡</div>
+                                    <div><strong>Trusted Guidance</strong><span class="subtext">Built on approved packages and internal standards.</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>At-a-Glance Capabilities</h3>
+                    <div class="capabilities">
+                        <div class="capability">
+                            <div class="icon">⌕</div>
+                            <div><strong>Search Components</strong><span class="subtext">Find RDS components by name, category or use case.</span></div>
+                        </div>
+                        <div class="capability">
+                            <div class="icon">▤</div>
+                            <div><strong>Component Documentation</strong><span class="subtext">Get properties, slots, variations and usage guidance.</span></div>
+                        </div>
+                        <div class="capability">
+                            <div class="icon">&lt;/&gt;</div>
+                            <div><strong>Code Examples</strong><span class="subtext">Get ready-to-use examples in HTML and Web Components.</span></div>
+                        </div>
+                        <div class="capability">
+                            <div class="icon">🎨</div>
+                            <div><strong>Design Guidelines</strong><span class="subtext">Access design tokens, spacing, colors and accessibility rules.</span></div>
+                        </div>
+                        <div class="capability">
+                            <div class="icon">✓</div>
+                            <div><strong>Best Practices</strong><span class="subtext">Apply accessibility, usability and brand compliance checks.</span></div>
+                        </div>
+                    </div>
+
+                    <h3>End-to-End Example</h3>
+                    <div class="flow">
+                        <div class="flow-item">
+                            <div class="circle">💬</div>
+                            <strong>1. Ask</strong>
+                            <p class="subtext">Developer asks Copilot to create an RDS-aligned form.</p>
+                        </div>
+                        <div class="flow-item">
+                            <div class="circle">🤖</div>
+                            <strong>2. Request</strong>
+                            <p class="subtext">Copilot sends the request to the MCP server.</p>
+                        </div>
+                        <div class="flow-item">
+                            <div class="circle">🟧</div>
+                            <strong>3. Fetch</strong>
+                            <p class="subtext">The server retrieves approved examples and component knowledge.</p>
+                        </div>
+                        <div class="flow-item">
+                            <div class="circle">⌨️</div>
+                            <strong>4. Generate</strong>
+                            <p class="subtext">Copilot produces accurate RDS-compliant code.</p>
+                        </div>
+                        <div class="flow-item">
+                            <div class="circle">✅</div>
+                            <strong>5. Build</strong>
+                            <p class="subtext">The developer gets working, on-brand UI faster.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section id="access" class="card">
@@ -857,18 +1110,12 @@ npm install @rabobank/rds-style@5.0.0</pre>
                         then continue with the hands-on lab and the trainer answer key.
                     </p>
 
-                    <div class="grid-4">
+                    <div class="grid-3">
                         <div class="mini-card">
                             <div class="icon">📘</div>
                             <h3>Self-Study Guide</h3>
                             <p>This page explains MCP concepts, the Rabobank Design System context and the broader learning path.</p>
                             <p><a class="content-link" href="index.html">Open self-study guide</a></p>
-                        </div>
-                        <div class="mini-card green">
-                            <div class="icon">🧱</div>
-                            <h3>RDS MCP Overview</h3>
-                            <p>A more visual explainer page for the Rabobank Design System MCP Server and its core value.</p>
-                            <p><a class="content-link" href="index2.html">Open overview page</a></p>
                         </div>
                         <div class="mini-card orange">
                             <div class="icon">🧪</div>
@@ -1188,8 +1435,7 @@ Return:
                     training
                 </p>
                 <p class="footer">
-                    Continue with the <a class="content-link" href="index2.html">RDS MCP Overview</a>, the
-                    <a class="content-link" href="mcp-extension-lab.html">Developer Lab</a> or the
+                    Continue with the <a class="content-link" href="mcp-extension-lab.html">Developer Lab</a> or the
                     <a class="content-link" href="mcp-extension-trainer-answer-key.html">Trainer Answer Key</a>.
                 </p>
             </div>
