@@ -148,6 +148,11 @@
             color: var(--rabo-bright-blue);
         }
 
+        .content-link {
+            color: var(--rabo-bright-blue);
+            font-weight: 700;
+        }
+
         section {
             margin-bottom: 22px;
         }
@@ -573,11 +578,12 @@
                 <a href="#architecture">3. Architecture</a>
                 <a href="#rds">4. RDS MCP Server</a>
                 <a href="#access">5. Access & setup</a>
-                <a href="#usage">6. Using the server</a>
-                <a href="#labs">7. Guided labs</a>
-                <a href="#build">8. Build your own MCP server</a>
-                <a href="#rubric">9. Assessment rubric</a>
-                <a href="#cheatsheet">10. Cheat sheet</a>
+                <a href="#training-pages">6. Training pages</a>
+                <a href="#usage">7. Using the server</a>
+                <a href="#labs">8. Guided labs</a>
+                <a href="#build">9. Build your own MCP server</a>
+                <a href="#rubric">10. Assessment rubric</a>
+                <a href="#cheatsheet">11. Cheat sheet</a>
             </nav>
 
             <div>
@@ -844,8 +850,37 @@ npm install @rabobank/rds-style@5.0.0</pre>
                     <pre class="code">npx http-server</pre>
                 </section>
 
+                <section id="training-pages" class="card lab">
+                    <h2>6. Training Pages</h2>
+                    <p class="lead">
+                        This workspace contains multiple HTML training pages. Use this page as the conceptual starting point,
+                        then continue with the hands-on lab and the trainer answer key.
+                    </p>
+
+                    <div class="grid-3">
+                        <div class="mini-card">
+                            <div class="icon">📘</div>
+                            <h3>Self-Study Guide</h3>
+                            <p>This page explains MCP concepts, the Rabobank Design System context and the broader learning path.</p>
+                            <p><a class="content-link" href="index.html">Open self-study guide</a></p>
+                        </div>
+                        <div class="mini-card orange">
+                            <div class="icon">🧪</div>
+                            <h3>MCP Extension Lab</h3>
+                            <p>The hands-on developer lab for extending the existing FastAPI and FastMCP demo server.</p>
+                            <p><a class="content-link" href="mcp-extension-lab.html">Open developer lab</a></p>
+                        </div>
+                        <div class="mini-card purple">
+                            <div class="icon">🧭</div>
+                            <h3>Trainer Answer Key</h3>
+                            <p>The trainer companion with expected implementation, validation steps and demo guidance.</p>
+                            <p><a class="content-link" href="mcp-extension-trainer-answer-key.html">Open trainer answer key</a></p>
+                        </div>
+                    </div>
+                </section>
+
                 <section id="usage" class="card">
-                    <h2>6. Using the MCP Server Effectively</h2>
+                    <h2>7. Using the MCP Server Effectively</h2>
                     <p>
                         A good MCP prompt is specific about the desired outcome, the target component, constraints and
                         the quality requirements.
@@ -892,7 +927,7 @@ Return:
                 </section>
 
                 <section id="labs" class="card lab">
-                    <h2>7. Guided Labs</h2>
+                    <h2>8. Guided Labs</h2>
                     <p>
                         Complete these labs in order. Each lab builds confidence with MCP-assisted development and
                         prepares you for the final custom MCP-server assignment.
@@ -951,7 +986,7 @@ Return:
                 </section>
 
                 <section id="build" class="card lab">
-                    <h2>8. Final Assignment — Build Your Own MCP Server</h2>
+                    <h2>9. Final Assignment — Build Your Own MCP Server</h2>
                     <p class="lead">
                         Build a small MCP server that exposes useful tools to an AI client. The goal is not to create a
                         large production system, but to understand how MCP server design works in practice.
@@ -1053,7 +1088,7 @@ Return:
                 </section>
 
                 <section id="rubric" class="card">
-                    <h2>9. Assessment Rubric</h2>
+                    <h2>10. Assessment Rubric</h2>
                     <table class="rubric">
                         <tbody>
                             <tr>
@@ -1090,7 +1125,7 @@ Return:
                 </section>
 
                 <section id="cheatsheet" class="card">
-                    <h2>10. MCP Cheat Sheet</h2>
+                    <h2>11. MCP Cheat Sheet</h2>
 
                     <div class="grid-3">
                         <div class="mini-card">
